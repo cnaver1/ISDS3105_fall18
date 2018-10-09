@@ -31,9 +31,10 @@ What rules of the 3 mentioned above does `sn_users` violate? Would you
 still be able to plot a line chart of the number of users by year?
 
 ``` r
-#ggplot() +
-#  geom_line(aes(x  = ..., y =  ... ), data = ...) +
-#  geom_line(aes(x = ..., y = ...), data = ...)
+ggplot() +
+  geom_line(aes(x  = year, y =  twitter, color = "twitter"), data = sn_users) +
+  geom_line(aes(x = year, y = facebook,color ="facebook"), data = sn_users)+
+
 ```
 
 To tidy `sn_users` we want (i) to collapse the millions of users under

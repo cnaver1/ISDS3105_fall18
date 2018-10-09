@@ -34,10 +34,18 @@ ggplot(data = freqCasualties, aes(x = class, y = n, fill = gender)) +
 #we want to plot the below chart using selfiesCasualties
 #1. Replicate the above using selfiesCasualties and geom_bar() instead of geom_col. You need to change the default stat  to 'identity'
 
+ggplot(data = selfiesCasualties)+
+  geom_bar(aes(x = class, fill = gender))
+
 #ggplot( data = selfiesCasualties, aes()) +
 #  geom_bar()
 
 #2. Plot proportions instead of counts for both the previous charts
+
+
+ggplot(data = selfiesCasualties)+
+  geom_bar(aes(x = class, y = ..prop.., fill = gender, group = gender), position = 'dodge')
+
 
 ```
 
@@ -56,17 +64,19 @@ In this exercise we are working with a dataset of LSU graduates in May 2017.
 #Load the csv from your local or github. If you use github you need the link to the "raw" file
 dt <- read_csv('https://raw.githubusercontent.com/DarioBoh/ISDS3105_fall18/master/data/graduates_2017may.csv')
 #1. Inspect it using glimpse()
+glimpse(dt)
 #2. Use the plot a barchart of the counts of graduates by college. Map the bar fill to gender.
-
+ggplot(data = dt)+
+  geom_bar(aes(x = College, fill = Sex))
 ```
 
 
 Read the documentation for `?geom_bar` to see how you can map `y = ..propr..` instead of `y = ..count..` to plot the proportions of the students in each college.
 
 ```{r}
-#' 3.
-#' ggplot(data  = ..., aes(... , ...)) +
-#' geom_bar()
+
+ ggplot(data = dt)+
+  geom_bar(aes(x = College,y = ..prop..,fill = Sex, group = 1))
 ```
 
 
@@ -76,6 +86,9 @@ Add to the code for question 3 `group = Sex` and `position  = 'dodge'` to plot t
 
 #' switch between position = 'dodge' and position = 'fill' 
 #' to make sure your interpretation of the data is consistent
+
+ ggplot(data = dt)+
+  geom_bar(aes(x = College,y = ..prop..,fill = Sex, group = Sex), position = 'dodge')
 ```
 
 
@@ -86,15 +99,21 @@ Now try to use `may2017graduates`, to map the fill to gender and the number of g
 Mapping too many variables on the same geom can make your chart hard to comprehend. When you have a categorical variable that you want to control for, facets allow to create a grid of charts of your dataset, where each chart is a level of the variable that you are faceting for. For instance, let's say we want to analyse gender bias controlling for race in each college. Use
 
 ```{r}
-#ggplot() +
-#  geom_bar() +       #plot a count of students in each college
-#  facet_wrap(~ Ethnicity)
+ggplot(data = dt) +
+  geom_bar(aes(x = College)) +       #plot a count of students in each college
+  facet_wrap(~ Ethnicity, scales = 'free_y')
 ```
 
 
 ```{r}
 #repeat the previous but facetting by College and mapping ethnicity to x
 # add: labs(title = "New plot title", subtitle = "A subtitle", caption = 'data from www.lsu.edu')
+
+ggplot(data = dt) +
+  geom_bar(aes(x = Ethnicity)) +       
+  facet_wrap(~College , scales = 'free_y')+
+  labs(title = "New plot title", subtitle = "A subtitle", caption = 'data from www.lsu.edu')
+  
 ```
 
 
@@ -110,6 +129,16 @@ To select colors, you can sue rgb, hex or [color names]((http://www.stat.columbi
 #  OR (ALTERNATIVELY) change the colors usig :     scale_fill_brewer(type = ..., palette = ...)
 # use theme(panel.background = element_blank()) to remove the background color
 # check the documentation for element_text() and use it within theme(axis.text.x = element_text()) to rotate the lables by 45 degrees
+
+ggplot(data = dt) +
+  geom_bar(aes(College, fill = Sex)) +
+  scale_fill_manual(values  = c('#ff0000' ,'#9932CC' ))
+
+ggplot(data = dt) +
+  geom_bar(aes(College, fill = Sex)) +
+  scale_fill_brewer(palette = "Reds" , name = "Gender") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), panel.background = element_blank())
+
 ```
 
 You might have noticed that ggplot2 uses default names for the scales of the mapped variables. You can change those defaults by changing the values in `scale_[aes]_[type]`:
@@ -122,6 +151,12 @@ You might have noticed that ggplot2 uses default names for the scales of the map
 #use the below function to change the legend title into "gender" the legend values into 'Male' and 'Female'
 #  scale_fill_discrete(name = ... , labels =  ... ) 
 #move the legend to the bottom. To find out how to do that, check the documentation for theme(legend.position)
+
+ggplot(data = dt) +
+  geom_bar(aes(College, fill = Sex))+
+
+  scale_x_discrete(name = 'College Abbreviations') 
+ scale_fill_discrete(name = name , labels =  labels ) 
 ```
 
 
