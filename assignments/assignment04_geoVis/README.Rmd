@@ -19,7 +19,20 @@ Note that there is a difference between time and datetime: If you coerce `create
 
 ```{r}
 dt <- read_csv('https://raw.githubusercontent.com/fivethirtyeight/data/master/trump-twitter/realDonaldTrump_poll_tweets.csv')
+
+library(lubridate)
+date <- mdy_hms(dt$created_at)
+dt$created_at<-date
+
+ggplot(data = dt,aes(created_at))+
+  geom_histogram()+scale_x_datetime()+
+  xlab("date")
+  
+
+
+
 ```
+
 
 
 # Income map
